@@ -1,0 +1,48 @@
+{% layout "layout.liquid" %}
+{% block content %}
+
+{% if searchParams['userId'] %}
+  {% capture sortLink %} /?userId={{searchParams['userId']}}&orderBy={% endcapture %}
+{% else %}
+  {% assign sortLink = '/?orderBy=' %}
+{% endif %}
+
+<nav class="navbar navbar-expand-sm">
+  <div class="container-fluid">
+    <ul class="navbar-nav">
+      <li class="nav-item navbar-text">
+        <span class="navbar-text">Sort by: </span>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{sortLink}}likes">Likes</a>
+      </li>
+      <li class="nav-item navbar-text">
+        <span class="navbar-text">|</span>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{sortLink}}hates">Hates</a>
+      </li>
+      <li class="nav-item navbar-text">
+        <span class="navbar-text">|</span>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{{sortLink}}date">Date</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  <div class="row">
+    <div class="col-9">
+      {% for movie in movies %}
+        {% render 'movie.liquid', movie: movie, currentUser: currentUser, searchParams: searchParams %}
+      {% endfor %}
+    </div>
+    <div class="col-3">
+      {% if currentUser %}
+        <a href="/movie/new" class="btn btn-success">New Movie</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% comment %} convert our dates to Number of seconds 
+              since 1970-01-01 00:00:00 UTC {% endcomment %}
+{% assign dateStart = movie.createdAt | date: '%s' %}
+{% assign nowTimestamp = 'now' | date: '%s' %}
+
+{% comment %} difference in seconds {% endcomment %}
+{% assign diffSeconds = nowTimestamp | minus: dateStart %}
+
+{% comment %} difference in days {% endcomment %}
+{% assign diffDays = diffSeconds | divided_by: 3600 | divided_by: 24 | floor %}
+
+{% assign userLikes = movie.splitVotes['up'] contains currentUser.id %}
+{% assign userHates = movie.splitVotes['down'] contains currentUser.id %}
+
+{% assign queryLink = '/' %}
+{% if searchParams['orderBy'] %}
+  {% capture queryLink %}/?orderBy={{searchParams['orderBy']}}{% endcapture %}
+  {% capture userLink %}{{queryLink}}&userId={% endcapture %}
+{% else %}
+  {% assign userLink = '/?userId=' %}
+{% endif %}
+
+{% if searchParams['userId'] %}
+  {% if queryLink != '/' %}
+    {% capture queryLink %}{{queryLink}}&userId={{searchParams['userId']}}{% endcapture %}
+  {% else %}
+    {% capture queryLink %}/?userId={{searchParams['userId']}}{% endcapture %}
+  {% endif %}
+{% endif %}
+
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">{{ movie.title }}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Posted by <a href= '{{userLink}}{{movie.UserId}}'> {{ movie.User.firstName }} {{ movie.User.lastName }}</a> {% if diffDays != 0 %} {{ diffDays }} day(s) ago. {% else %} today. {% endif %}</a></h6>
+    <p class="card-text">{{ movie.description }}</p>
+    {% if currentUser != null and movie.UserId != currentUser.id %}
+      {% if userLikes %}
+        <span class="card-link">{{ movie.likes }} likes</span>
+        <span class="card-link"> | </span>
+        <a href="/movie/down/{{movie.id}}{{queryLink}}" class="card-link">{{ movie.hates }} hates</a>
+
+        <div class="clear-link">
+          You like this Movie
+          <span class="card-link"> | </span>
+          <a href="/movie/clear/{{movie.id}}{{queryLink}}" class="card-link">Unlike</a>
+        </div>
+      {% elsif userHates %}
+        <a href="/movie/up/{{movie.id}}{{queryLink}}" class="card-link">{{ movie.likes }} likes</a>
+        <span class="card-link"> | </span>
+        <span class="card-link">{{ movie.hates }} hates</span>
+
+        <div class="clear-link">
+          You hate this Movie
+          <span class="card-link"> | </span>
+          <a href="/movie/clear/{{movie.id}}{{queryLink}}" class="card-link">Unhate</a>
+        </div>
+      {% else %}
+        <a href="/movie/up/{{movie.id}}{{queryLink}}" class="card-link">{{ movie.likes }} likes</a>
+        <span class="card-link"> | </span>
+        <a href="/movie/down/{{movie.id}}{{queryLink}}" class="card-link">{{ movie.hates }} hates</a>
+      {% endif %}
+    {% else %}
+      <span class="card-link">{{ movie.likes }} likes</span>
+      <span class="card-link"> | </span>
+      <span class="card-link">{{ movie.hates }} hates</span>
+    {% endif %}
+  </div>
+</div>

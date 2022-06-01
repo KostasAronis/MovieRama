@@ -1,0 +1,15 @@
+<nav class="navbar navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand mb-0 h1" href='/'>MovieRama</a>
+
+    <form class="d-flex">
+      {% if currentUser %}
+        Welcome back,
+        <a href='/user/logout'> {{ currentUser.firstName }} {{ currentUser.lastName }}</a> !
+      {% else %}
+        <a class="btn " type="button" href='/user/login'>Login</a>
+        <a class="btn btn-outline-success" type="button" href='/user/register'>Sign Up</a>
+      {% endif %}
+    </form>
+  </div>
+</nav>

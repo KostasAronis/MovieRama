@@ -1,0 +1,17 @@
+{% layout "layout.liquid" %}
+{% block content %}
+  <form class="div-center" method="post">
+    <h3> Add New Movie </h3>
+    <div class="form-outline mb-4 center">
+      <input name="title" id="title" class="form-control" />
+      <label class="form-label" for="title">Movie Title</label>
+    </div>
+
+    <div class="form-outline mb-4 center">
+      <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+      <label class="form-label" for="description">Movie Description</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block mb-4">Create</button>
+  </form>
+{% endblock %}

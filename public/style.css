@@ -1,0 +1,9 @@
+.div-center {
+  display: block;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.clear-link {
+  float: right;
+}
